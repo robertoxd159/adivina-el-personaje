@@ -357,36 +357,69 @@ const Game = ({ session }) => {
   // 3. VISTA MAPA DE NIVELES
   if (view === 'level_map') {
     return (
-      <div className="min-h-screen bg-slate-950 p-6 text-white max-w-md mx-auto relative">
-        {renderNotification()}
-        <div className="flex justify-between items-center mb-6">
-            <button onClick={() => setView('subcategories')} className="text-xs text-slate-500 hover:text-white font-black uppercase tracking-widest transition-colors">← Series</button>
-            <button onClick={() => setIsShopOpen(true)} className="bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/50 flex items-center gap-1.5 active:scale-95 transition-all">
-                <span className="text-amber-500 font-black text-xs tabular-nums">{coins}</span>
+      /* 1. CAMBIO: h-screen y overflow-y-auto para poder bajar */
+      <div className="h-screen bg-slate-950 overflow-y-auto custom-scroll">
+        <div className="p-6 text-white max-w-md mx-auto pb-24 relative">
+          
+          {renderNotification()}
+          
+          <header className="flex justify-between items-center mb-10">
+            <button 
+              onClick={() => setView('subcategories')} 
+              className="text-[10px] text-slate-500 hover:text-white font-black uppercase tracking-widest transition-colors"
+            >
+              ← Volver
             </button>
+            
+            <div className="text-center">
+              <h1 className="text-xl font-black italic tracking-tighter uppercase leading-none">
+                NIVELES
+              </h1>
+              <span className="text-[10px] text-indigo-500 font-bold uppercase tracking-[0.2em]">
+                {selectedSub}
+              </span>
+            </div>
+
+            <button 
+              onClick={() => setIsShopOpen(true)} 
+              className="bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/50 flex items-center gap-1.5 active:scale-95 transition-all"
+            >
+              <span className="text-amber-500 font-black text-xs tabular-nums">{coins}</span>
+              <span className="text-amber-500 text-[10px] font-bold">+</span>
+            </button>
+          </header>
+
+          <div className="grid grid-cols-4 gap-4">
+            {filteredLevels.map((lvl, idx) => {
+              /* Mantenemos tu lógica de bloqueo original */
+              const isLocked = lvl.id > userProgreso && idx !== 0;
+              const isCurrent = idx === levelIndex;
+              
+              return (
+                <button 
+                  key={lvl.id} 
+                  disabled={isLocked} 
+                  onClick={() => { setLevelIndex(idx); setView('playing'); }}
+                  className={`aspect-square rounded-2xl flex items-center justify-center font-black transition-all relative ${
+                    isCurrent ? 'bg-indigo-600 text-white shadow-[0_5px_0_0_#3730a3] scale-105 z-10' :
+                    isLocked ? 'bg-slate-900 text-slate-700 opacity-50 cursor-not-allowed border border-slate-800' : 
+                    'bg-slate-800 text-indigo-300 shadow-[0_5px_0_0_#1e1b4b] active:translate-y-1 active:shadow-none'
+                  }`}
+                >
+                  {isLocked ? '🔒' : idx + 1}
+                  {isCurrent && (
+                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-white rounded-full animate-ping"></div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+          
+          {isShopOpen && renderShop()}
         </div>
-        
-        <h2 className="text-2xl font-black mb-8 text-indigo-400 uppercase tracking-tighter leading-none">{selectedSub}</h2>
-        <div className="grid grid-cols-4 gap-4">
-          {filteredLevels.map((lvl, idx) => {
-            const isLocked = lvl.id > userProgreso && idx !== 0;
-            const isCurrent = idx === levelIndex;
-            return (
-              <button key={lvl.id} disabled={isLocked} onClick={() => { setLevelIndex(idx); setView('playing'); }}
-                className={`aspect-square rounded-2xl flex items-center justify-center font-black border-2 transition-all shadow-md relative ${
-                  isCurrent ? 'bg-indigo-600 border-white scale-110 z-10' :
-                  isLocked ? 'bg-slate-900 border-slate-800 opacity-50' : 'bg-slate-800 border-slate-700 text-indigo-300 hover:border-indigo-500'
-                }`}>
-                {isLocked ? '🔒' : idx + 1}
-                {isCurrent && <div className="absolute -bottom-2 w-4 h-4 bg-white rotate-45 rounded-sm"></div>}
-              </button>
-            );
-          })}
-        </div>
-        {isShopOpen && renderShop()}
       </div>
     );
-  }
+}
 
   // 4. VISTA DE JUEGO (PLAYING)
   return (
