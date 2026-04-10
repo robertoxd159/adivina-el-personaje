@@ -5,3 +5,17 @@
 body {
   @apply bg-slate-950 overflow-hidden;
 }
+
+/* Estilo para el scroll lateral */
+.custom-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: #020617; /* slate-950 */
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: #4f46e5; /* indigo-600 */
+  border-radius: 10px;
+}

@@ -229,37 +229,77 @@ const Game = ({ session }) => {
   if (view === 'categories') {
     const categoryNames = [...new Set(levels.map(l => l.categoria))];
     return (
-      <div className="min-h-screen bg-slate-950 p-6 text-white max-w-md mx-auto">
-        {renderNotification()}
-        <header className="flex justify-between items-center mb-10">
-          <button onClick={() => supabase.auth.signOut()} className="text-[10px] text-slate-600 font-black tracking-widest uppercase">SALIR</button>
-          <h1 className="text-2xl font-black italic tracking-tighter uppercase leading-none">PIXEL <span className="text-indigo-500">QUEST</span></h1>
-          <div className="flex gap-2 items-center">
-            <button onClick={() => setIsShopOpen(true)} className="bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/50 flex items-center gap-1.5 active:scale-95 transition-all">
-              <span className="text-amber-500 font-black text-xs tabular-nums">{coins}</span>
-              <span className="text-amber-500 text-[10px] font-bold">+</span>
+      /* Contenedor principal con scroll habilitado */
+      <div className="h-screen bg-slate-950 overflow-y-auto custom-scroll">
+        <div className="p-6 text-white max-w-md mx-auto pb-24">
+          
+          {renderNotification()}
+          
+          <header className="flex justify-between items-center mb-10">
+            <button 
+              onClick={() => supabase.auth.signOut()} 
+              className="text-[10px] text-slate-600 font-black tracking-widest uppercase hover:text-red-500 transition-colors"
+            >
+              SALIR
             </button>
-            {isAdmin && <button onClick={() => setIsAdminOpen(true)} className="text-xs bg-slate-800 hover:bg-slate-700 p-2 rounded-lg transition-colors">⚙️</button>}
-          </div>
-        </header>
+            
+            <h1 className="text-2xl font-black italic tracking-tighter uppercase leading-none">
+              PIXEL <span className="text-indigo-500">QUEST</span>
+            </h1>
 
-        <div className="grid gap-6">
-          {categoryNames.map(cat => {
-            const levelWithPortada = levels.find(l => l.categoria === cat && l.cat_portada_url);
-            const bgImage = levelWithPortada ? levelWithPortada.cat_portada_url : levels.find(l => l.categoria === cat)?.imagen_url;
-            return (
-              <button key={cat} onClick={() => { setSelectedCat(cat); setView('subcategories'); }} className="group relative h-44 w-full rounded-[2.5rem] overflow-hidden border-2 border-slate-800 hover:border-indigo-500 active:scale-95 transition-all shadow-2xl">
-                {bgImage && <img src={bgImage} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={cat} />}
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
-                <div className="absolute bottom-6 left-8 text-left">
-                  <h3 className="text-3xl font-black uppercase italic tracking-tighter leading-none">{cat || 'GENERAL'}</h3>
-                </div>
+            <div className="flex gap-2 items-center">
+              <button 
+                onClick={() => setIsShopOpen(true)} 
+                className="bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/50 flex items-center gap-1.5 active:scale-95 transition-all"
+              >
+                <span className="text-amber-500 font-black text-xs tabular-nums">{coins}</span>
+                <span className="text-amber-500 text-[10px] font-bold">+</span>
               </button>
-            );
-          })}
+              {isAdmin && (
+                <button 
+                  onClick={() => setIsAdminOpen(true)} 
+                  className="text-xs bg-slate-800 hover:bg-slate-700 p-2 rounded-lg transition-colors"
+                >
+                  ⚙️
+                </button>
+              )}
+            </div>
+          </header>
+
+          <div className="grid gap-6">
+            {categoryNames.map(cat => {
+              const levelWithPortada = levels.find(l => l.categoria === cat && l.cat_portada_url);
+              const bgImage = levelWithPortada ? levelWithPortada.cat_portada_url : levels.find(l => l.categoria === cat)?.imagen_url;
+              
+              return (
+                <button 
+                  key={cat} 
+                  onClick={() => { setSelectedCat(cat); setView('subcategories'); }} 
+                  className="group relative h-44 w-full rounded-[2.5rem] overflow-hidden border-2 border-slate-800 hover:border-indigo-500 active:scale-95 transition-all shadow-2xl shrink-0"
+                >
+                  {bgImage && (
+                    <img 
+                      src={bgImage} 
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                      alt={cat} 
+                    />
+                  )}
+                  {/* Overlay gradiente para asegurar legibilidad del texto */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
+                  
+                  <div className="absolute bottom-6 left-8 text-left">
+                    <h3 className="text-3xl font-black uppercase italic tracking-tighter leading-none">
+                      {cat || 'GENERAL'}
+                    </h3>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {isShopOpen && renderShop()}
+          {isAdminOpen && <AdminPanel onClose={() => setIsAdminOpen(false)} />}
         </div>
-        {isShopOpen && renderShop()}
-        {isAdminOpen && <AdminPanel onClose={() => setIsAdminOpen(false)} />}
       </div>
     );
   }
