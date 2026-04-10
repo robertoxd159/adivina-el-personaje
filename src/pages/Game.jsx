@@ -390,69 +390,80 @@ const Game = ({ session }) => {
 
   // 4. VISTA DE JUEGO (PLAYING)
   return (
-    <div className="flex flex-col min-h-screen max-w-md mx-auto p-4 bg-slate-950 text-white relative">
-      {renderNotification()}
-      <header className="flex justify-between items-center mb-4">
-        <button onClick={() => setView('level_map')} className="text-[10px] text-slate-500 hover:text-white font-black uppercase tracking-widest transition-colors">← Mapa</button>
-        <div className="bg-slate-800/50 px-4 py-1.5 rounded-full border border-slate-700 text-[10px] font-black uppercase text-indigo-400 truncate max-w-[150px] tracking-tight">
-          {selectedSub} · NIVEL {levelIndex + 1}
-        </div>
-        <button onClick={() => setIsShopOpen(true)} className="bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/50 flex items-center gap-1.5 active:scale-95 transition-all">
-          <span className="text-amber-500 font-black text-xs tabular-nums">{coins}</span>
-          <span className="text-amber-500/60 text-xs font-bold">+</span>
-        </button>
-      </header>
-
-      <h2 className="text-[10px] font-black text-slate-400 text-center mb-3 uppercase tracking-[0.2em] px-2">{currentLevel?.pregunta}</h2>
-
-      <div className={`flex-1 min-h-[160px] w-full rounded-[2.5rem] border-4 flex items-center justify-center mb-4 overflow-hidden transition-all shadow-2xl ${
-        status === 'success' ? 'border-green-500 bg-green-500/10' : status === 'error' ? 'border-red-500 bg-red-500/10' : 'border-slate-800 bg-slate-900/50'
-      }`}>
-        <img src={currentLevel?.imagen_url} className="w-full h-full object-cover animate-in fade-in duration-500" alt="Quiz" />
+  /* h-screen y overflow-hidden evitan que aparezca el scroll de la página y se corten las letras */
+  <div className="flex flex-col h-screen max-w-md mx-auto p-4 bg-slate-950 text-white relative overflow-hidden">
+    {renderNotification()}
+    
+    <header className="flex justify-between items-center mb-3 shrink-0">
+      <button onClick={() => setView('level_map')} className="text-[10px] text-slate-500 hover:text-white font-black uppercase tracking-widest transition-colors">← Mapa</button>
+      <div className="bg-slate-800/50 px-4 py-1.5 rounded-full border border-slate-700 text-[10px] font-black uppercase text-indigo-400 truncate max-w-[150px] tracking-tight">
+        {selectedSub} · NIVEL {levelIndex + 1}
       </div>
+      <button onClick={() => setIsShopOpen(true)} className="bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/50 flex items-center gap-1.5 active:scale-95 transition-all">
+        <span className="text-amber-500 font-black text-xs tabular-nums">{coins}</span>
+        <span className="text-amber-500/60 text-xs font-bold">+</span>
+      </button>
+    </header>
 
-      <div className="flex gap-3 w-full mb-5">
-        <button onClick={revealHint} disabled={coins < 30 || status !== 'playing'} className="flex-1 bg-slate-900 border border-slate-800 p-2 rounded-2xl flex flex-col items-center disabled:opacity-30 active:scale-95 transition-all group shadow-md">
-          <span className="text-[9px] text-slate-500 group-hover:text-white uppercase font-black tracking-widest mb-1 transition-colors">Revelar</span>
-          <div className="flex items-center gap-1.5">
-            <span className="text-amber-500 font-bold text-xs">💰 30</span>
-          </div>
-        </button>
-        <button onClick={skipLevel} disabled={coins < 80 || status !== 'playing'} className="flex-1 bg-slate-900 border border-slate-800 p-2 rounded-2xl flex flex-col items-center disabled:opacity-30 active:scale-95 transition-all group shadow-md">
-          <span className="text-[9px] text-slate-500 group-hover:text-white uppercase font-black tracking-widest mb-1 transition-colors">Saltar</span>
-          <div className="flex items-center gap-1.5">
-            <span className="text-amber-500 font-bold text-xs">💰 80</span>
-          </div>
-        </button>
-      </div>
+    <h2 className="text-[10px] font-black text-slate-400 text-center mb-2 uppercase tracking-[0.2em] px-2 shrink-0">
+      {currentLevel?.pregunta}
+    </h2>
 
-      <div className="flex gap-1 mb-8 flex-wrap justify-center min-h-[44px]">
-        {selectedLetters.map((slot, i) => (
-          <div key={i} onClick={() => handleRemove(i)} className={`w-9 h-11 flex items-center justify-center text-xl font-black rounded-t-lg border-b-4 transition-all cursor-pointer shadow-inner ${
-            status === 'success' ? 'bg-green-600 border-green-800 animate-pulse' :
-            status === 'error' ? 'bg-red-600 border-red-800' :
-            slot ? 'bg-indigo-600 border-indigo-800 scale-105' : 'bg-slate-800 border-slate-700 text-transparent'
-          }`}>
-            {slot?.char}
-          </div>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-6 gap-2 mb-4 p-2 bg-slate-900 rounded-2xl border border-slate-800 shadow-inner">
-        {availableLetters.map((l) => (
-          <button key={l.id} disabled={l.used || status === 'success'} onClick={() => handleSelect(l)}
-            className={`aspect-square rounded-xl font-black text-xl transition-all shadow-md ${
-              l.used ? 'bg-slate-900 text-slate-800 scale-95 opacity-50' : 'bg-white text-slate-900 active:scale-75 shadow-[0_4px_0_0_#cbd5e1]'
-            }`}>
-            {l.char}
-          </button>
-        ))}
-      </div>
-
-      {isShopOpen && renderShop()}
-      {isAdminOpen && <AdminPanel onClose={() => setIsAdminOpen(false)} />}
+    {/* El contenedor de imagen ahora es flexible (flex-1) y no permite que la imagen empuje lo de abajo */}
+    <div className={`relative flex-1 min-h-0 w-full rounded-[2.5rem] border-4 flex items-center justify-center mb-4 overflow-hidden transition-all shadow-2xl ${
+      status === 'success' ? 'border-green-500 bg-green-500/10' : 
+      status === 'error' ? 'border-red-500 bg-red-500/10' : 
+      'border-slate-800 bg-slate-900/50'
+    }`}>
+      <img 
+        src={currentLevel?.imagen_url} 
+        /* object-contain hace que la imagen se adapte al hueco disponible sin salirse */
+        className="w-full h-full object-contain bg-slate-900/20 animate-in fade-in duration-500" 
+        alt="Quiz" 
+      />
     </div>
-  );
+
+    {/* Ayudas compactas */}
+    <div className="flex gap-3 w-full mb-4 shrink-0">
+      <button onClick={revealHint} disabled={coins < 30 || status !== 'playing'} className="flex-1 bg-slate-900 border border-slate-800 p-2 rounded-2xl flex flex-col items-center disabled:opacity-30 active:scale-95 transition-all group shadow-md">
+        <span className="text-[9px] text-slate-500 group-hover:text-white uppercase font-black tracking-widest mb-1 transition-colors">Revelar</span>
+        <span className="text-amber-500 font-bold text-xs">💰 30</span>
+      </button>
+      <button onClick={skipLevel} disabled={coins < 80 || status !== 'playing'} className="flex-1 bg-slate-900 border border-slate-800 p-2 rounded-2xl flex flex-col items-center disabled:opacity-30 active:scale-95 transition-all group shadow-md">
+        <span className="text-[9px] text-slate-500 group-hover:text-white uppercase font-black tracking-widest mb-1 transition-colors">Saltar</span>
+        <span className="text-amber-500 font-bold text-xs">💰 80</span>
+      </button>
+    </div>
+
+    {/* Espacio de respuesta ajustable */}
+    <div className="flex gap-1 mb-4 flex-wrap justify-center min-h-[40px] shrink-0">
+      {selectedLetters.map((slot, i) => (
+        <div key={i} onClick={() => handleRemove(i)} className={`w-8 h-10 flex items-center justify-center text-lg font-black rounded-t-lg border-b-4 transition-all cursor-pointer shadow-inner ${
+          status === 'success' ? 'bg-green-600 border-green-800 animate-pulse' :
+          status === 'error' ? 'bg-red-600 border-red-800' :
+          slot ? 'bg-indigo-600 border-indigo-800 scale-105' : 'bg-slate-800 border-slate-700 text-transparent'
+        }`}>
+          {slot?.char}
+        </div>
+      ))}
+    </div>
+
+    {/* Teclado con tamaño controlado */}
+    <div className="grid grid-cols-6 gap-1.5 mb-2 p-2 bg-slate-900 rounded-2xl border border-slate-800 shadow-inner shrink-0">
+      {availableLetters.map((l) => (
+        <button key={l.id} disabled={l.used || status === 'success'} onClick={() => handleSelect(l)}
+          className={`aspect-square rounded-xl font-black text-lg transition-all shadow-md ${
+            l.used ? 'bg-slate-900 text-slate-800 scale-95 opacity-50' : 'bg-white text-slate-900 active:scale-75 shadow-[0_3px_0_0_#cbd5e1]'
+          }`}>
+          {l.char}
+        </button>
+      ))}
+    </div>
+
+    {isShopOpen && renderShop()}
+    {isAdminOpen && <AdminPanel onClose={() => setIsAdminOpen(false)} />}
+  </div>
+);
 };
 
 export default Game;
