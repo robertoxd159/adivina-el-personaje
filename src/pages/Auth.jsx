@@ -26,8 +26,8 @@ const Auth = () => {
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-md bg-slate-900 border border-slate-800 p-8 rounded-3xl shadow-2xl">
-        <h1 className="text-3xl font-black text-white text-center mb-2 italic">QUIZ ANIME</h1>
-        <p className="text-slate-400 text-center mb-8 text-sm">Entra para guardar tus monedas 🪙</p>
+        <h1 className="text-3xl font-black text-white text-center mb-2 italic">PIXEL QUEST</h1>
+        <p className="text-slate-400 text-center mb-8 text-sm">Entra para guardar tus monedas</p>
         
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
           <input 

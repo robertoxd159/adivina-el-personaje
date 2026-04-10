@@ -201,7 +201,7 @@ const Game = ({ session }) => {
         <div className="bg-slate-900 w-full max-w-xs rounded-[2.5rem] border-2 border-slate-800 p-6 shadow-2xl relative">
             <button onClick={() => setIsShopOpen(false)} className="absolute -top-3 -right-3 bg-red-500 hover:bg-red-600 text-white w-8 h-8 rounded-full font-black text-xs transition-colors">X</button>
             <div className="text-center mb-6">
-                <h3 className="text-amber-500 font-black italic text-xl uppercase tracking-tighter">Tienda Quiz<span className="text-indigo-500">PRO</span></h3>
+                <h3 className="text-amber-500 font-black italic text-xl uppercase tracking-tighter">Tienda PIXEL <span className="text-indigo-500">QUEST</span></h3>
                 <p className="text-[9px] text-slate-500 font-black uppercase tracking-widest">Yape • Plin • PayPal</p>
             </div>
             <div className="grid gap-3 mb-6">
@@ -233,7 +233,7 @@ const Game = ({ session }) => {
         {renderNotification()}
         <header className="flex justify-between items-center mb-10">
           <button onClick={() => supabase.auth.signOut()} className="text-[10px] text-slate-600 font-black tracking-widest uppercase">SALIR</button>
-          <h1 className="text-2xl font-black italic tracking-tighter uppercase leading-none">QUIZ<span className="text-indigo-500">PRO</span></h1>
+          <h1 className="text-2xl font-black italic tracking-tighter uppercase leading-none">PIXEL <span className="text-indigo-500">QUEST</span></h1>
           <div className="flex gap-2 items-center">
             <button onClick={() => setIsShopOpen(true)} className="bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/50 flex items-center gap-1.5 active:scale-95 transition-all">
               <span className="text-amber-500 font-black text-xs tabular-nums">{coins}</span>
