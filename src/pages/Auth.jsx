@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
 import { supabase } from '../services/supabase';
+/* 1. Importamos los iconos */
+import { Eye, EyeOff } from 'lucide-react';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  /* 2. Creamos el estado para mostrar/ocultar */
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     
-    // Intenta registrarse; si ya existe, inicia sesión automáticamente
     const { error } = await supabase.auth.signUp({ email, password });
     
     if (error) {
-      // Si el usuario ya existe, intentamos login normal
       const { error: loginError } = await supabase.auth.signInWithPassword({ email, password });
       if (loginError) alert(loginError.message);
     } else {
@@ -38,14 +40,26 @@ const Auth = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <input 
-            type="password" 
-            placeholder="Contraseña" 
-            className="bg-slate-800 border border-slate-700 p-4 rounded-xl text-white outline-none focus:border-indigo-500"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+
+          {/* 3. El Input de contraseña con el Ojo */}
+          <div className="relative">
+            <input 
+              type={showPassword ? "text" : "password"} 
+              placeholder="Contraseña" 
+              className="w-full bg-slate-800 border border-slate-700 p-4 rounded-xl text-white outline-none focus:border-indigo-500 pr-12"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-indigo-400 transition-colors"
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
+
           <button 
             disabled={loading}
             className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold p-4 rounded-xl transition-all active:scale-95 disabled:opacity-50"
